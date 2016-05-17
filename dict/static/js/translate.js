@@ -12,9 +12,9 @@
     });
 
     altTemplateTags.$inject = ['$interpolateProvider'];
-    TranslationController.$inject = ['$scope', '$http', '$window', '$timeout', '$log', 'getWord', 'saveWord'];
+    TranslationController.$inject = ['$scope', '$window', '$timeout', '$log', 'getWord', 'saveWord'];
     getWord.$inject = ['$http', 'APIKEY'];
-    saveWord.$inject = ['$http', '$window', '$timeout', '$log'];
+    saveWord.$inject = ['$http'];
 
     function altTemplateTags($interpolateProvider) {
         $interpolateProvider.startSymbol('{$');
@@ -29,48 +29,31 @@
                               '&lang=en-ru&text=' + word;
 
                 var promise = $http.get(urlDict)
-                .then(
-                    function (response) {
-                        return response;
-                    })
-                .catch(
-                    function() {
-                        throw new Error('I am Error.');
-                    }
-                );
-
+                .catch(function() {
+                    throw new Error('I am Error.');
+                });
                 return promise;
-
             }
         };
 
         return wordTrans;
-
     }
 
-    function saveWord($http, $window, $timeout, $log) {
+    function saveWord($http) {
         var wordSave = {
             save: function(request) {
-                $http(request)
-
-                    .then(function(response) {
-
-                        $timeout(function() {
-                            $window.location.href = '/';
-                        });
-                        return response;
-
-                    }, function(error) {
-                        $log.log('Server error: ' + error);
-                        angular.element('#submit-btn').attr('disabled', false).html('Добавить');
+                var promise = $http(request)
+                    .catch(function(error) {
+                        return error;
                     });
+                return promise;
             }
         };
 
         return wordSave;
     }
 
-    function TranslationController($scope, $http, $window, $timeout, $log, getWord, saveWord) {
+    function TranslationController($scope, $window, $timeout, $log, getWord, saveWord) {
 
         var vm = this;
 
@@ -100,13 +83,11 @@
                                 }
                                 vm.data.russian = transArr.join(', ');
                             }
-
                         }
-                    ).
-                    catch(function(error) {
+                    )
+                    .catch(function(error) {
                         $log.log(error);
                     });
-
             }
         }
 
@@ -124,8 +105,20 @@
                 data: angular.toJson(vm.data)
             };
 
-            saveWord.save(req);
+            saveWord.save(req)
+                .then(function(response) {
 
+                    if (response.status < 200 || response.status >= 300) {
+                        $log.log('Error status: ' + response.status + ' ' + response.statusText);
+                        angular.element('#submit-btn').attr('disabled', false).html('Добавить');
+                    } else {
+                        $timeout(function() {
+                            $window.location.href = '/';
+                        });
+                    }
+
+                    return response;
+                });
         }
     }
 
