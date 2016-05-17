@@ -16,9 +16,10 @@ def word_list(request):
         try:
             existing = Word.objects.get(english=data['english'])
             existing.russian = data['russian']
+            existing.transcription = data['transcription']
             existing.save()
         except:
-            word = Word(english = data['english'], russian = data['russian'])
+            word = Word(english = data['english'], russian = data['russian'], transcription = data['transcription'])
             word.save()
 
         return render(request, 'dict/word_list.html', {'words': words})
@@ -38,7 +39,7 @@ def get_words(request):
     word_list = []
     words = Word.objects.all()
     for w in words:
-        word = {'english':w.english, 'russian':w.russian, 'id': w.id}
+        word = {'english':w.english, 'russian':w.russian, 'id': w.id, 'transcription': w.transcription}
         word_list.append(word)
 
     return HttpResponse(json.dumps(word_list), content_type="application/json")

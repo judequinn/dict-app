@@ -34,6 +34,13 @@
 			</div>
 
 			<div class="form-group">
+				<label class="col-lg-2 col-md-2 col-sm-2 control-label text-left" for="transcription">Транскрипция:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input class="form-control" name="transcription" ng-model="transCtrl.data.transcription" type="text"/>
+				</div>
+			</div>
+
+			<div class="form-group">
 				<label class="col-lg-2 col-md-2 col-sm-2 control-label" for="name">Перевод:</label>
 				<div class="col-lg-10 col-md-10 col-sm-10">
 					<textarea class="form-control" name="russian" ng-model="transCtrl.data.russian" type="text" required/></textarea>
@@ -48,7 +55,7 @@
 
 	<div class="word-list">
 			<dl ng-repeat="word in transCtrl.words | orderBy: 'english'" id="{$ word.id $}">
-				<dt class="column-e">{$ word.english $}</dt>
+				<dt class="column-e">{$ word.english $} <span ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
 				<dd class="column-r">{$ word.russian $}</dd>
 			</dl>
 	</div>

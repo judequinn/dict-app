@@ -116,7 +116,7 @@
                                 var id = res[1].data.id;
 
                                 angular.element('html, body').animate({
-                                    scrollTop: angular.element('#' + id).offset().top - 400
+                                    scrollTop: angular.element('#' + id).offset().top - 440
                                 });
                             }
 
@@ -129,6 +129,7 @@
                                     transArr.push(transSource[i].text);
                                 }
                                 vm.data.russian = transArr.join(', ');
+                                vm.data.transcription = res[0].data.def[0].ts;
                             }
                         }
                     )
