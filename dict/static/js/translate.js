@@ -5,6 +5,7 @@
     .module('translateApp', [])
     .config(altTemplateTags)
     .controller('TranslationController', TranslationController)
+    .factory('getData', getData)
     .factory('getWord', getWord)
     .factory('saveWord', saveWord)
     .value('APIKEY', {
@@ -12,13 +13,32 @@
     });
 
     altTemplateTags.$inject = ['$interpolateProvider'];
-    TranslationController.$inject = ['$scope', '$window', '$timeout', '$log', 'getWord', 'saveWord'];
+    TranslationController.$inject = ['$scope', '$window', '$timeout', '$log', 'getWord', 'saveWord', 'getData'];
+    getData.$inject = ['$http', '$window'];
     getWord.$inject = ['$http', '$q', '$window', 'APIKEY'];
     saveWord.$inject = ['$http'];
 
     function altTemplateTags($interpolateProvider) {
         $interpolateProvider.startSymbol('{$');
         $interpolateProvider.endSymbol('$}');
+    }
+
+    function getData($http, $window) {
+        var service = {
+            fetch: function() {
+
+                var url = 'http://' + $window.location.host + '/get_words/';
+
+                var promise = $http.get(url)
+                    .catch(function(){
+                        throw new Error('Oh no, an error!');
+                    });
+
+                return promise;
+            }
+        };
+
+        return service;
     }
 
     function getWord($http, $q, $window, APIKEY) {
@@ -58,12 +78,25 @@
         return wordSave;
     }
 
-    function TranslationController($scope, $window, $timeout, $log, getWord, saveWord) {
+    function TranslationController($scope, $window, $timeout, $log, getWord, saveWord, getData) {
 
         var vm = this;
 
         vm.changed = changed;
         vm.save = save;
+
+        activate();
+
+        function activate() {
+            getData.fetch()
+                .then(function(response) {
+                    var data = angular.fromJson(response);
+                    vm.words = data.data;
+                })
+                .catch(function(error) {
+                    $log.log(error);
+                });
+        }
 
         function changed() {
 
