@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from .models import Word
 
 import json
@@ -23,3 +24,12 @@ def word_list(request):
         return render(request, 'dict/word_list.html', {'words': words})
 
     return render(request, 'dict/word_list.html', {'words': words})
+
+def get_word(request, word):
+
+    try:
+        existing_word = Word.objects.get(english=word)
+        existing_word_to_dict = {'english': existing_word.english, 'russian': existing_word.russian}
+        return HttpResponse(json.dumps(existing_word_to_dict), content_type="application/json")
+    except:
+        return HttpResponse(json.dumps({'error': 'word not found'}), content_type="application/json")

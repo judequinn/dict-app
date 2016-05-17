@@ -13,7 +13,7 @@
 
     altTemplateTags.$inject = ['$interpolateProvider'];
     TranslationController.$inject = ['$scope', '$window', '$timeout', '$log', 'getWord', 'saveWord'];
-    getWord.$inject = ['$http', 'APIKEY'];
+    getWord.$inject = ['$http', '$q', '$window', 'APIKEY'];
     saveWord.$inject = ['$http'];
 
     function altTemplateTags($interpolateProvider) {
@@ -21,14 +21,19 @@
         $interpolateProvider.endSymbol('$}');
     }
 
-    function getWord($http, APIKEY) {
+    function getWord($http, $q, $window, APIKEY) {
         var wordTrans = {
             async: function(word) {
 
                 var urlDict = 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=' + APIKEY.key +
                               '&lang=en-ru&text=' + word;
 
-                var promise = $http.get(urlDict)
+                var urlGetWord = 'http://' + $window.location.host + '/get_word/' + word;
+
+                var newWord = $http({method: 'GET', url: urlDict, cache: 'true'});
+                var existingWord = $http({method: 'GET', url: urlGetWord, cache: 'true'});
+
+                var promise = $q.all([newWord, existingWord])
                 .catch(function() {
                     throw new Error('I am Error.');
                 });
@@ -73,10 +78,10 @@
 
                             var res = angular.fromJson(response);
 
-                            if (res.data.def[0]) {
+                            if (res[0].data.def[0]) {
 
                                 var transArr = [];
-                                var transSource = res.data.def[0].tr;
+                                var transSource = res[0].data.def[0].tr;
 
                                 for (var i = 0; i < transSource.length; i++) {
                                     transArr.push(transSource[i].text);

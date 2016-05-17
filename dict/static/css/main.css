@@ -2,6 +2,11 @@ html, body {
   font-size: 100%;
 }
 
+.form-wrapper {
+  position: fixed;
+  z-index: 99;
+}
+
 .word-form {
   margin-bottom: 30px;
   border: 1px solid gray;
@@ -16,13 +21,17 @@ html, body {
 }
 
 .heading {
-  margin: 50px 0;
+  margin: 50px 0 50px 15px;
 }
 
 .table {
   table-layout: fixed;
   width: 70%;
   clear: both;
+  position: relative;
+  top: 280px;
+  margin-left: 15px;
+  margin-bottom: 50px;
 }
 
 .column-r {
