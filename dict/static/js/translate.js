@@ -88,6 +88,7 @@
         activate();
 
         function activate() {
+
             getData.fetch()
                 .then(function(response) {
                     var data = angular.fromJson(response);
@@ -110,6 +111,14 @@
                         function(response){
 
                             var res = angular.fromJson(response);
+
+                            if (!res[1].data.error) {
+                                var id = res[1].data.id;
+
+                                angular.element('html, body').animate({
+                                    scrollTop: angular.element('#' + id).offset().top - 400
+                                });
+                            }
 
                             if (res[0].data.def[0]) {
 
