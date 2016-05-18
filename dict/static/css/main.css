@@ -1,10 +1,11 @@
 html, body {
-  font-size: 100%;
+  font-size: 110%;
 }
 
-.form-wrapper {
-  position: fixed;
-  z-index: 99;
+.form-wrapper,
+.word-wrapper {
+  overflow: hidden;
+  clear: both;
 }
 
 .word-form {
@@ -32,10 +33,44 @@ html, body {
   margin-bottom: 50px;
 }
 
+.no-left-padding {
+  padding-left: 0 !important;
+}
+
 .column-r {
   width: 70%;
 }
 
 .column-e {
   width: 30%;
+}
+
+.transcription {
+  font-style: italic;
+  font-weight: normal;
+  color: #3D5CBF;
+}
+
+.existing-word {
+  border: 1px solid #992931;
+  border-radius: 5px;
+  color: #992931;
+  padding: 20px;
+}
+
+.animation-fade.ng-enter {
+  transition: .5s linear all;
+  opacity: 0;
+}
+
+.animation-fade.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.animation-fade.ng-leave {
+  transition:0.5s linear all;
+  opacity:1;
+}
+.animation-fade.ng-leave.ng-leave-active {
+  opacity:0;
 }

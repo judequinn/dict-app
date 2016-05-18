@@ -30,12 +30,14 @@ def get_word(request, word):
 
     try:
         existing_word = Word.objects.get(english=word)
-        existing_word_to_dict = {'english': existing_word.english, 'russian': existing_word.russian, 'id': existing_word.id}
+        existing_word_to_dict = {'english': existing_word.english, 'russian': existing_word.russian,
+        'id': existing_word.id, 'transcription': existing_word.transcription}
         return HttpResponse(json.dumps(existing_word_to_dict), content_type="application/json")
     except:
         return HttpResponse(json.dumps({'error': 'word not found'}), content_type="application/json")
 
 def get_words(request):
+
     word_list = []
     words = Word.objects.all()
     for w in words:

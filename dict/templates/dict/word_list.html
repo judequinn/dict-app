@@ -4,72 +4,67 @@
 
 <html lang="ru">
 
-<head>
-	<meta charset="utf-8">
-	<title>Словарик слов</title>
-	<!--[if lt IE 9]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<link rel="stylesheet" href="{% static 'css/main.css' %}">
-</head>
+	<head>
+		<meta charset="utf-8">
+		<title>Словарик</title>
+		<!--[if lt IE 9]>
+			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	</head>
 
-<body>
+	<body>
 
-<div class="container" ng-app="translateApp" ng-controller="TranslationController as transCtrl">
+		<div class="container" ng-app="translateApp" ng-controller="TranslationController as transCtrl">
 
-	<input type="hidden" name="csrf_token" ng-init="csrf_token='{{csrf_token}}'" ng-model="csrf_token">
+			<input type="hidden" name="csrf_token" ng-init="csrf_token='{{csrf_token}}'" ng-model="csrf_token">
 
-	<h1 class="heading">Арикслов ({{ words.count }})</h1>
+			<h1 class="heading">Арикслов ({{ words.count }})</h1>
 
-	<div class="form-wrapper col-lg-8 col-md-8 col-sm-11 col-xs-11">
+			<div class="form-wrapper">
+				<form name="transForm" class="col-lg-8 col-md-9 col-sm-11 col-xs-11 word-form" role="form" novalidate>
 
-		<form name="transForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 word-form form-horizontal" role="form" novalidate>
+					<div class="form-group">
+						<label class="control-label text-left" for="english">Слово:</label>
+						<input ng-change="transCtrl.changed()" ng-model-options="{debounce: 500}" class="form-control" name="english" ng-model="transCtrl.data.english" type="text" required/>
+					</div>
 
-			<div class="form-group">
-				<label class="col-lg-2 col-md-2 col-sm-2 control-label text-left" for="english">Слово:</label>
-				<div class="col-lg-10 col-md-10 col-sm-10">
-					<input ng-change="transCtrl.changed()" ng-model-options="{debounce: 500}" class="form-control" name="english" ng-model="transCtrl.data.english" type="text" required/>
-				</div>
+					<div class="form-group">
+						<label class="control-label text-left" for="transcription">Транскрипция:</label>
+						<input class="form-control" name="transcription" ng-model="transCtrl.data.transcription" type="text"/>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label" for="name">Перевод:</label>
+						<textarea class="form-control" name="russian" ng-model="transCtrl.data.russian" type="text" required/></textarea>
+					</div>
+
+					<button id="submit-btn" ng-click="transCtrl.save()" type="submit" class="btn btn-lg btn-default pull-right" ng-disabled="transForm.$invalid">Добавить</button>
+
+				</form>
 			</div>
 
-			<div class="form-group">
-				<label class="col-lg-2 col-md-2 col-sm-2 control-label text-left" for="transcription">Транскрипция:</label>
-				<div class="col-lg-10 col-md-10 col-sm-10">
-					<input class="form-control" name="transcription" ng-model="transCtrl.data.transcription" type="text"/>
-				</div>
+			<div class="col-lg-5 col-md-5 col-sm-7 col-xs-12 no-left-padding animation-fade" ng-if="transCtrl.existingWord.id >= 0">
+				<p class="lead">Это слово уже есть в словаре!</p>
+				<dl class="existing-word">
+					<dt class="column-e">{$ transCtrl.existingWord.english $} <span class="transcription" ng-if="transCtrl.existingWord.transcription">[{$ transCtrl.existingWord.transcription $}]</span></dt>
+					<dd class="column-r">{$ transCtrl.existingWord.russian $}</dd>
+				</dl>
 			</div>
 
-			<div class="form-group">
-				<label class="col-lg-2 col-md-2 col-sm-2 control-label" for="name">Перевод:</label>
-				<div class="col-lg-10 col-md-10 col-sm-10">
-					<textarea class="form-control" name="russian" ng-model="transCtrl.data.russian" type="text" required/></textarea>
-				</div>
+			<div class="word-wrapper">
+				<hr>
+				<dl ng-repeat="word in transCtrl.words | orderBy: 'english'" id="{$ word.id $}">
+					<dt class="column-e">{$ word.english $} <span class="transcription" ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
+					<dd class="column-r">{$ word.russian $}</dd>
+				</dl>
 			</div>
 
-			<button id="submit-btn" ng-click="transCtrl.save()" type="submit" class="btn btn-lg btn-default pull-right" ng-disabled="transForm.$invalid">Добавить</button>
-
-		</form>
-
-	</div>
-
-	<div class="word-list">
-			<dl ng-repeat="word in transCtrl.words | orderBy: 'english'" id="{$ word.id $}">
-				<dt class="column-e">{$ word.english $} <span ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
-				<dd class="column-r">{$ word.russian $}</dd>
-			</dl>
-	</div>
-
-</div>
-
-<script
-			src="https://code.jquery.com/jquery-1.12.3.min.js"
-			integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="
-			crossorigin="anonymous"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="{% static 'js/translate.js' %}"></script>
-
-</body>
-
+		</div>
+	<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+	<script src="{% static 'js/translate.js' %}"></script>
+	</body>
 </html>

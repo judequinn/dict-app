@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-    .module('translateApp', [])
+    .module('translateApp', ['ngAnimate'])
     .config(altTemplateTags)
     .controller('TranslationController', TranslationController)
     .factory('getData', getData)
@@ -102,6 +102,7 @@
         function changed() {
 
             vm.data.russian = '';
+            vm.existingWord = {};
 
             if (vm.data.english) {
 
@@ -113,11 +114,7 @@
                             var res = angular.fromJson(response);
 
                             if (!res[1].data.error) {
-                                var id = res[1].data.id;
-
-                                angular.element('html, body').animate({
-                                    scrollTop: angular.element('#' + id).offset().top - 440
-                                });
+                                vm.existingWord = res[1].data;
                             }
 
                             if (res[0].data.def[0]) {
