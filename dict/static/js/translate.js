@@ -91,20 +91,21 @@
 
             getData.fetch()
                 .then(function(response) {
+
                     var data = angular.fromJson(response);
-                    vm.words = data.data;
-
                     var words = data.data;
-
                     var ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
-
                     var groups = Array(ALPHABET.length);
 
+                    // create an array of arrays with letters
+                    // as first elements
                     for (var k = 0; k < groups.length; k++) {
                         groups[k] = [];
                         groups[k].push(ALPHABET.charAt(k));
                     }
 
+                    // push word to corresponding array
+                    // judging by first character
                     for (var i = 0; i < words.length; i++) {
                         for (var j = 0; j < groups.length; j++) {
                             if (words[i].english.charAt(0) === groups[j][0]) {
@@ -112,8 +113,6 @@
                             }
                         }
                     }
-
-                    $log.log(groups);
 
                     vm.groups = groups;
                 })

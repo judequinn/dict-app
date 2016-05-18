@@ -1,9 +1,7 @@
 {% load staticfiles %}
 
 <!doctype html>
-
 <html lang="ru">
-
 	<head>
 		<meta charset="utf-8">
 		<title>Словарик</title>
@@ -15,7 +13,6 @@
 	</head>
 
 	<body>
-
 		<div class="container" ng-app="translateApp" ng-controller="TranslationController as transCtrl">
 
 			<input type="hidden" name="csrf_token" ng-init="csrf_token='{{csrf_token}}'" ng-model="csrf_token">
@@ -45,24 +42,23 @@
 				</form>
 			</div>
 
-			<div class="col-lg-5 col-md-5 col-sm-7 col-xs-12 no-left-padding animation-fade" ng-if="transCtrl.existingWord.id >= 0">
-				<p class="lead">Это слово уже есть в словаре!</p>
-				<dl class="existing-word">
-					<dt class="column-e">{$ transCtrl.existingWord.english $} <span class="transcription" ng-if="transCtrl.existingWord.transcription">[{$ transCtrl.existingWord.transcription $}]</span></dt>
-					<dd class="column-r">{$ transCtrl.existingWord.russian $}</dd>
+			<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 animation-fade" ng-if="transCtrl.existingWord.id >= 0">
+				<p class="lead text-danger"><span class="glyphicon glyphicon-warning-sign"></span> Это слово уже есть в словаре!</p>
+				<dl class="row text-info">
+					<dt class="column-e col-lg-4">{$ transCtrl.existingWord.english $} <span class="transcription" ng-if="transCtrl.existingWord.transcription">[{$ transCtrl.existingWord.transcription $}]</span></dt>
+					<dd class="column-r col-lg-8">{$ transCtrl.existingWord.russian $}</dd>
 				</dl>
 			</div>
 
 			<div class="word-wrapper" ng-repeat="wordGroup in transCtrl.groups" ng-show="wordGroup.length > 1">
-				<hr>
 				<div ng-repeat="word in wordGroup">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4" ng-if="$first">
-						<p class="huge-text"><strong>{$ word | uppercase $}</strong></p>
+						<p class="huge-text text-danger"><strong>{$ word | uppercase $}</strong></p>
 					</div>
 					<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-4" ng-if=!$first>
-						<dl>
-							<dt class="column-e">{$ word.english $} <span class="transcription" ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
-							<dd class="column-r">{$ word.russian $}</dd>
+						<dl class="definition">
+							<dt class="column-e col-lg-3">{$ word.english $} <span class="transcription" ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
+							<dd class="column-r col-lg-9">{$ word.russian $}</dd>
 						</dl>
 					</div>
 				</div>
