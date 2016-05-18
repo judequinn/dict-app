@@ -101,14 +101,14 @@
                     // as first elements
                     for (var k = 0; k < groups.length; k++) {
                         groups[k] = [];
-                        groups[k].push(ALPHABET.charAt(k));
+                        groups[k].push({'english': ALPHABET.charAt(k)});
                     }
 
                     // push word to corresponding array
                     // judging by first character
                     for (var i = 0; i < words.length; i++) {
                         for (var j = 0; j < groups.length; j++) {
-                            if (words[i].english.charAt(0) === groups[j][0]) {
+                            if (words[i].english.charAt(0) === groups[j][0].english) {
                                 groups[j].push(words[i]);
                             }
                         }

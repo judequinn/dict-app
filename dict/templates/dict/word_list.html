@@ -51,9 +51,9 @@
 			</div>
 
 			<div class="word-wrapper" ng-repeat="wordGroup in transCtrl.groups" ng-show="wordGroup.length > 1">
-				<div ng-repeat="word in wordGroup">
+				<div ng-repeat="word in wordGroup | orderBy: 'english'">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4" ng-if="$first">
-						<p class="huge-text text-danger"><strong>{$ word | uppercase $}</strong></p>
+						<p class="huge-text text-danger"><strong>{$ word.english | uppercase $}</strong></p>
 					</div>
 					<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-4" ng-if=!$first>
 						<dl class="definition">
