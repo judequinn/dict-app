@@ -53,12 +53,19 @@
 				</dl>
 			</div>
 
-			<div class="word-wrapper">
+			<div class="word-wrapper" ng-repeat="wordGroup in transCtrl.groups" ng-show="wordGroup.length > 1">
 				<hr>
-				<dl ng-repeat="word in transCtrl.words | orderBy: 'english'" id="{$ word.id $}">
-					<dt class="column-e">{$ word.english $} <span class="transcription" ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
-					<dd class="column-r">{$ word.russian $}</dd>
-				</dl>
+				<div ng-repeat="word in wordGroup">
+					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4" ng-if="$first">
+						<p class="huge-text"><strong>{$ word | uppercase $}</strong></p>
+					</div>
+					<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-4" ng-if=!$first>
+						<dl>
+							<dt class="column-e">{$ word.english $} <span class="transcription" ng-if="word.transcription">[{$ word.transcription $}]</span></dt>
+							<dd class="column-r">{$ word.russian $}</dd>
+						</dl>
+					</div>
+				</div>
 			</div>
 
 		</div>

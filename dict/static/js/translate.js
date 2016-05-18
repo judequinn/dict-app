@@ -93,6 +93,29 @@
                 .then(function(response) {
                     var data = angular.fromJson(response);
                     vm.words = data.data;
+
+                    var words = data.data;
+
+                    var ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
+
+                    var groups = Array(ALPHABET.length);
+
+                    for (var k = 0; k < groups.length; k++) {
+                        groups[k] = [];
+                        groups[k].push(ALPHABET.charAt(k));
+                    }
+
+                    for (var i = 0; i < words.length; i++) {
+                        for (var j = 0; j < groups.length; j++) {
+                            if (words[i].english.charAt(0) === groups[j][0]) {
+                                groups[j].push(words[i]);
+                            }
+                        }
+                    }
+
+                    $log.log(groups);
+
+                    vm.groups = groups;
                 })
                 .catch(function(error) {
                     $log.log(error);
