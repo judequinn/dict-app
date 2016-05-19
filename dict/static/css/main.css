@@ -5,12 +5,24 @@ html, body {
 .definition {
   overflow: hidden;
   border-bottom: 1px dashed #eee;
+  padding-bottom: 15px;
 }
 
 .form-wrapper,
 .word-wrapper {
   overflow: hidden;
   clear: both;
+}
+
+.last-word {
+  background-color: #e6f2ff;
+  border-radius: 10px;
+  padding: 40px 30px;
+  margin-bottom: 30px;
+}
+
+.existing-word {
+  padding: 0 30px;
 }
 
 .word-wrapper {
@@ -22,8 +34,9 @@ html, body {
   margin-bottom: 30px;
   border: 1px solid #eee;
   background-color: #f2f2f2;
-  padding: 30px;
+  padding: 40px;
   border-radius: 15px;
+  overflow: hidden;
 }
 
 .add-word-btn {
@@ -33,6 +46,7 @@ html, body {
 
 .heading {
   margin: 50px 0 50px 15px;
+  font-size: 2.5em !important;
 }
 
 .word-list {

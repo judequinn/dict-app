@@ -115,6 +115,7 @@
                     }
 
                     vm.groups = groups;
+                    vm.lastWord = words[words.length - 1];
                 })
                 .catch(function(error) {
                     $log.log(error);
