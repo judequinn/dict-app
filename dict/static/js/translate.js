@@ -84,12 +84,13 @@
 
         vm.changed = changed;
         vm.save = save;
-        // default wordgroup
+        vm.editWord = editWord;
         vm.character = 'a';
+        vm.data = {};
 
         activate();
 
-        function activate() {
+        function activate(word) {
 
             getData.fetch()
                 .then(function(response) {
@@ -117,11 +118,37 @@
                     }
 
                     vm.groups = groups;
-                    vm.lastWord = words[words.length - 1];
+                    if (word) {
+                        vm.lastWord = word;
+                    } else {
+                        vm.lastWord = words[words.length - 1];
+                    }
                 })
                 .catch(function(error) {
                     $log.log(error);
                 });
+        }
+
+        function editWord(word) {
+
+            vm.data.english = word.english;
+            vm.data.russian = word.russian;
+
+            if (!word.transcription) {
+
+                getWord.async(vm.data.english)
+                    .then(
+                        function(response) {
+                            var res = angular.fromJson(response);
+                            vm.data.transcription = res[0].data.def[0].ts;
+                        }
+                    )
+                    .catch(function(error) {
+                        $log.log(error);
+                    });
+            } else {
+                vm.data.transcription = word.transcription;
+            }
         }
 
         function changed() {
@@ -179,15 +206,23 @@
                 .then(function(response) {
 
                     if (response.status < 200 || response.status >= 300) {
+
                         $log.log('Error status: ' + response.status + ' ' + response.statusText);
                         angular.element('#submit-btn').attr('disabled', false).html('Добавить');
                     } else {
-                        $timeout(function() {
-                            $window.location.href = '/';
-                        });
+
+                        angular.element('#submit-btn').attr('disabled', false).html('Добавить');
+                        var word = vm.data;
+                        activate(word);
+                        vm.character = vm.data.english.charAt(0);
+                        vm.data = {};
+                        vm.existingWord = {};
                     }
 
                     return response;
+                })
+                .catch(function(error) {
+                    $log.log('Server error: ' + error);
                 });
         }
     }
