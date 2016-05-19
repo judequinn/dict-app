@@ -152,6 +152,8 @@
             } else {
                 vm.data.transcription = word.transcription;
             }
+
+            $window.scrollTo(0, 0);
         }
 
         function changed() {
