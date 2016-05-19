@@ -14,6 +14,13 @@ html, body {
   clear: both;
 }
 
+.show-word-group {
+  cursor: pointer;
+  display: inline-block;
+  width: 3.846153846%;
+  font-size: 1.7em;
+}
+
 .last-word {
   background-color: #e6f2ff;
   border-radius: 10px;
@@ -76,19 +83,13 @@ html, body {
   color: #3D5CBF;
 }
 
-.animation-fade.ng-enter {
-  transition: .5s linear all;
-  opacity: 0;
-}
-
-.animation-fade.ng-enter.ng-enter-active {
+.animation-show-hide {
   opacity: 1;
 }
-
-.animation-fade.ng-leave {
-  transition:0.5s linear all;
-  opacity:1;
+.animation-show-hide.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
 }
-.animation-fade.ng-leave.ng-leave-active {
-  opacity:0;
+.animation-show-hide.ng-hide {
+  opacity: 0;
 }

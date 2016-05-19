@@ -84,6 +84,8 @@
 
         vm.changed = changed;
         vm.save = save;
+        // default wordgroup
+        vm.character = 'a';
 
         activate();
 

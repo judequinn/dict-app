@@ -17,35 +17,33 @@
 
 			<input type="hidden" name="csrf_token" ng-init="csrf_token='{{csrf_token}}'" ng-model="csrf_token">
 
-			<h1 class="heading text-center"><strong>{{ words.count }} words</strong></h1>
+			<h1 class="heading text-center text-danger"><strong>{{ words.count }} words</strong></h1>
 
 			<div class="form-wrapper">
 
-			<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+				<!-- Form wrapper -->
+				<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+					<form name="transForm" class="word-form" role="form" novalidate>
+						<div class="form-group">
+							<label class="control-label text-left" for="english">Слово:</label>
+							<input ng-change="transCtrl.changed()" ng-model-options="{debounce: 500}" class="form-control" name="english" ng-model="transCtrl.data.english" type="text" required/>
+						</div>
 
-				<form name="transForm" class="word-form" role="form" novalidate>
+						<div class="form-group">
+							<label class="control-label text-left" for="transcription">Транскрипция:</label>
+							<input class="form-control" name="transcription" ng-model="transCtrl.data.transcription" type="text"/>
+						</div>
 
-					<div class="form-group">
-						<label class="control-label text-left" for="english">Слово:</label>
-						<input ng-change="transCtrl.changed()" ng-model-options="{debounce: 500}" class="form-control" name="english" ng-model="transCtrl.data.english" type="text" required/>
-					</div>
+						<div class="form-group">
+							<label class="control-label" for="name">Перевод:</label>
+							<textarea class="form-control" name="russian" ng-model="transCtrl.data.russian" type="text" required/></textarea>
+						</div>
 
-					<div class="form-group">
-						<label class="control-label text-left" for="transcription">Транскрипция:</label>
-						<input class="form-control" name="transcription" ng-model="transCtrl.data.transcription" type="text"/>
-					</div>
+						<button id="submit-btn" ng-click="transCtrl.save()" type="submit" class="btn btn-lg btn-default pull-right" ng-disabled="transForm.$invalid">Добавить</button>
+					</form>
+				</div> <!-- End of Form wrapper -->
 
-					<div class="form-group">
-						<label class="control-label" for="name">Перевод:</label>
-						<textarea class="form-control" name="russian" ng-model="transCtrl.data.russian" type="text" required/></textarea>
-					</div>
-
-					<button id="submit-btn" ng-click="transCtrl.save()" type="submit" class="btn btn-lg btn-default pull-right" ng-disabled="transForm.$invalid">Добавить</button>
-
-				</form>
-
-				</div>
-
+				<!-- New word -->
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 					<div class="last-word">
 						<p class="text-muted">Новое слово:</p>
@@ -54,18 +52,30 @@
 							<dd class="col-lg-8">{$ transCtrl.lastWord.russian $}</dd>
 						</dl>
 					</div>
-				</div>
+				</div> <!-- End of New word -->
 			</div>
 
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 animation-fade existing-word" ng-if="transCtrl.existingWord.id >= 0">
+			<!-- Existing word -->
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 animation-show-hide existing-word" ng-show="transCtrl.existingWord.id >= 0">
 				<p class="text-danger"><span class="glyphicon glyphicon-warning-sign"></span> Это слово уже есть в словаре!</p>
 				<dl class="row text-info">
 					<dt class="col-lg-3 col-md-3 col-sm-6 col-xs-6">{$ transCtrl.existingWord.english $} <span class="transcription" ng-if="transCtrl.existingWord.transcription">[{$ transCtrl.existingWord.transcription $}]</span></dt>
 					<dd class="col-lg-9 col-md-9 col-sm-6 col-xs-6">{$ transCtrl.existingWord.russian $}</dd>
 				</dl>
-			</div>
+			</div> <!-- End of Existing word -->
 
-			<div class="word-wrapper" ng-repeat="wordGroup in transCtrl.groups" ng-show="wordGroup.length > 1">
+			<!-- First character navigation -->
+			<div class="col-lg-12">
+				<div class="show-word-group text-center"
+						 ng-repeat="wordGroup in transCtrl.groups"
+						 ng-click="transCtrl.character = wordGroup[0].english"
+						 ng-show="wordGroup.length > 1">
+					<a class="text-danger"><strong>{$ wordGroup[0].english | uppercase $}</strong></a>
+				</div>
+			</div> <!-- End of First character navigation -->
+
+			<!-- Word wrapper -->
+			<div class="word-wrapper animation-show-hide" ng-repeat="wordGroup in transCtrl.groups" ng-show="wordGroup.length > 1 && transCtrl.character === wordGroup[0].english">
 				<div ng-repeat="word in wordGroup | orderBy: 'english'">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4" ng-if="$first">
 						<p class="huge-text text-danger"><strong>{$ word.english | uppercase $}</strong></p>
@@ -79,7 +89,7 @@
 						</dl>
 					</div>
 				</div>
-			</div>
+			</div> <!-- End of Word wrapper -->
 
 		</div>
 	<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
