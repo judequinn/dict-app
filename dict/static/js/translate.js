@@ -87,6 +87,7 @@
         vm.editWord = editWord;
         vm.character = 'a';
         vm.data = {};
+        vm.newWordText = 'Новое слово:';
 
         activate();
 
@@ -119,6 +120,7 @@
 
                     vm.groups = groups;
                     if (word) {
+                        vm.newWordText = 'Последнее изменение:';
                         vm.lastWord = word;
                     } else {
                         vm.lastWord = words[words.length - 1];
@@ -133,6 +135,7 @@
 
             vm.data.english = word.english;
             vm.data.russian = word.russian;
+            vm.data.transcription = '';
 
             if (!word.transcription) {
 
@@ -144,7 +147,7 @@
                         }
                     )
                     .catch(function(error) {
-                        $log.log(error);
+                        $log.log('Could not get transcription!', error);
                     });
             } else {
                 vm.data.transcription = word.transcription;
